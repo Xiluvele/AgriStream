@@ -1,0 +1,648 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<style>
+    .agri-login-page {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 45px 20px;
+        background: linear-gradient(135deg, #f0f7f1, #e5f0e8);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .agri-login-container {
+        width: 100%;
+        max-width: 1050px;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        background: #ffffff;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 18px 55px rgba(20, 65, 39, 0.12);
+    }
+
+    /* LEFT BRAND PANEL */
+
+    .agri-login-banner {
+        background: linear-gradient( 145deg, #103d29, #1c6542, #2b8556 );
+        padding: 55px 40px;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .agri-login-banner::after {
+            content: "";
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            right: -150px;
+            bottom: -130px;
+            pointer-events: none;
+        }
+
+    .agri-login-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 25px;
+        font-weight: 750;
+        letter-spacing: -0.6px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .agri-login-brand-icon {
+        width: 45px;
+        height: 45px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    .agri-login-banner-content {
+        position: relative;
+        z-index: 1;
+        margin-top: 65px;
+    }
+
+    .agri-login-tag {
+        display: inline-block;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 30px;
+        padding: 8px 16px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        margin-bottom: 25px;
+    }
+
+    .agri-login-banner-content h2 {
+        font-size: 38px;
+        line-height: 1.2;
+        font-weight: 750;
+        margin-bottom: 20px;
+    }
+
+    .agri-login-banner-content p {
+        font-size: 15px;
+        line-height: 1.9;
+        color: #d3e9d9;
+    }
+
+    .agri-login-features {
+        margin-top: 35px;
+    }
+
+    .agri-login-feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 17px;
+        color: #edf8ef;
+        font-size: 14px;
+    }
+
+    .agri-login-feature-icon {
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .agri-login-banner-footer {
+        font-size: 12px;
+        color: #bddbc7;
+        margin-top: 50px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* RIGHT FORM PANEL */
+
+    .agri-login-form-area {
+        padding: 65px 55px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .agri-login-heading {
+        margin-bottom: 32px;
+    }
+
+        .agri-login-heading h1 {
+            font-size: 30px;
+            font-weight: 750;
+            color: #173c2a;
+            margin-bottom: 10px;
+        }
+
+        .agri-login-heading p {
+            color: #718078;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+    .agri-login-field {
+        margin-bottom: 22px;
+    }
+
+        .agri-login-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            color: #314b3c;
+            margin-bottom: 8px;
+        }
+
+        .agri-login-field .form-control {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #dce6de;
+            background: #f9fbf9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #263d2e;
+            box-shadow: none;
+            transition: 0.2s ease;
+        }
+
+            .agri-login-field .form-control:focus {
+                border-color: #238653;
+                background: #ffffff;
+                box-shadow: 0 0 0 3px rgba(35,134,83,0.10);
+            }
+
+            .agri-login-field .form-control::placeholder {
+                color: #a1ada4;
+            }
+
+    .agri-login-password-wrapper {
+        position: relative;
+    }
+
+        .agri-login-password-wrapper .form-control {
+            padding-right: 70px;
+        }
+
+    .agri-login-toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 13px;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #28764c;
+        font-size: 12px;
+        font-weight: 650;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .agri-login-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 27px;
+    }
+
+    .agri-login-remember {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #506656;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+        .agri-login-remember .form-check-input {
+            margin: 0;
+            cursor: pointer;
+        }
+
+            .agri-login-remember .form-check-input:checked {
+                background-color: #176c40;
+                border-color: #176c40;
+            }
+
+    .agri-login-link {
+        color: #176c40;
+        font-size: 13px;
+        font-weight: 650;
+        text-decoration: none;
+    }
+
+        .agri-login-link:hover {
+            color: #105431;
+            text-decoration: underline;
+        }
+
+    .agri-login-submit {
+        width: 100%;
+        background: #176c40;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 15px;
+        font-weight: 700;
+        transition: 0.2s ease;
+    }
+
+        .agri-login-submit:hover {
+            background: #105431;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(23,108,64,0.18);
+        }
+
+    .agri-login-register {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 13px;
+        color: #78867b;
+    }
+
+        .agri-login-register a {
+            color: #176c40;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+            .agri-login-register a:hover {
+                text-decoration: underline;
+            }
+
+    .agri-login-resend {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+        .agri-login-resend a {
+            color: #738579;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+            .agri-login-resend a:hover {
+                color: #176c40;
+                text-decoration: underline;
+            }
+
+    .agri-login-validation {
+        display: block;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .agri-login-external {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e7eee9;
+    }
+
+        .agri-login-external p {
+            color: #7d8c80;
+            font-size: 12px;
+        }
+
+    .agri-login-external-button {
+        background: #ffffff;
+        border: 1px solid #dce6de;
+        color: #235d3d;
+        padding: 10px 16px;
+        border-radius: 8px;
+        margin: 5px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .agri-login-external-button:hover {
+            background: #f0f7f1;
+        }
+
+    @@media (max-width: 850px) {
+        .agri-login-container {
+            grid-template-columns: 1fr;
+        }
+
+        .agri-login-banner {
+            padding: 35px;
+        }
+
+        .agri-login-banner-content {
+            margin-top: 30px;
+        }
+
+            .agri-login-banner-content h2 {
+                font-size: 28px;
+            }
+
+        .agri-login-banner-footer {
+            margin-top: 20px;
+        }
+
+        .agri-login-form-area {
+            padding: 40px 35px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .agri-login-page {
+            padding: 15px;
+        }
+
+        .agri-login-banner {
+            padding: 28px 24px;
+        }
+
+        .agri-login-form-area {
+            padding: 35px 22px;
+        }
+
+        .agri-login-heading h1 {
+            font-size: 26px;
+        }
+
+        .agri-login-options {
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="agri-login-page">
+
+    <div class="agri-login-container">
+
+        <!-- LEFT BRAND PANEL -->
+        <div class="agri-login-banner">
+
+            <div class="agri-login-brand">
+                <div class="agri-login-brand-icon">🌱</div>
+                <span>AgriStream</span>
+            </div>
+
+            <div class="agri-login-banner-content">
+
+                <span class="agri-login-tag">
+                    SMART AGRICULTURE PLATFORM
+                </span>
+
+                <h2>
+                    Welcome Back.<br />
+                    Let's Grow Smarter.
+                </h2>
+
+                <p>
+                    Sign in to access your farming dashboard,
+                    monitor connected devices and make better
+                    agricultural decisions using real-time data.
+                </p>
+
+                <div class="agri-login-features">
+
+                    <div class="agri-login-feature">
+                        <span class="agri-login-feature-icon">✓</span>
+                        Monitor farms and connected sensors
+                    </div>
+
+                    <div class="agri-login-feature">
+                        <span class="agri-login-feature-icon">✓</span>
+                        Manage irrigation operations
+                    </div>
+
+                    <div class="agri-login-feature">
+                        <span class="agri-login-feature-icon">✓</span>
+                        Access agricultural insights
+                    </div>
+
+                    <div class="agri-login-feature">
+                        <span class="agri-login-feature-icon">✓</span>
+                        Secure cloud-based management
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="agri-login-banner-footer">
+                © @DateTime.Now.Year AgriStream.
+                Growing smarter, together.
+            </div>
+
+        </div>
+
+        <!-- RIGHT LOGIN PANEL -->
+        <div class="agri-login-form-area">
+
+            <div class="agri-login-heading">
+                <h1>Sign in to AgriStream</h1>
+                <p>
+                    Enter your account details to continue
+                    to your dashboard.
+                </p>
+            </div>
+
+            <form id="account" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger agri-login-validation"
+                     role="alert">
+                </div>
+
+                <!-- EMAIL -->
+                <div class="agri-login-field">
+
+                    <label asp-for="Input.Email">
+                        Email Address
+                    </label>
+
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           autocomplete="username"
+                           aria-required="true"
+                           placeholder="Enter your email address" />
+
+                    <span asp-validation-for="Input.Email"
+                          class="text-danger agri-login-validation">
+                    </span>
+
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="agri-login-field">
+
+                    <label asp-for="Input.Password">
+                        Password
+                    </label>
+
+                    <div class="agri-login-password-wrapper">
+
+                        <input asp-for="Input.Password"
+                               class="form-control"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="Enter your password" />
+
+                        <button type="button"
+                                id="agriToggleLoginPassword"
+                                class="agri-login-toggle-password"
+                                aria-label="Show password"
+                                aria-controls="Input_Password">
+                            Show
+                        </button>
+
+                    </div>
+
+                    <span asp-validation-for="Input.Password"
+                          class="text-danger agri-login-validation">
+                    </span>
+
+                </div>
+
+                <!-- REMEMBER ME AND FORGOT PASSWORD -->
+                <div class="agri-login-options">
+
+                    <label class="agri-login-remember"
+                           asp-for="Input.RememberMe">
+
+                        <input asp-for="Input.RememberMe"
+                               class="form-check-input" />
+
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+
+                    </label>
+
+                    <a id="forgot-password"
+                       asp-page="./ForgotPassword"
+                       class="agri-login-link">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+                <!-- LOGIN BUTTON -->
+                <button id="login-submit"
+                        type="submit"
+                        class="agri-login-submit">
+                    Sign In
+                </button>
+
+            </form>
+
+            <!-- REGISTER -->
+            <div class="agri-login-register">
+                Don't have an account?
+                <a asp-page="./Register"
+                   asp-route-returnUrl="@Model.ReturnUrl">
+                    Create Account
+                </a>
+            </div>
+
+            <!-- RESEND CONFIRMATION -->
+            <div class="agri-login-resend">
+                <a id="resend-confirmation"
+                   asp-page="./ResendEmailConfirmation">
+                    Resend email confirmation
+                </a>
+            </div>
+
+            <!-- EXTERNAL LOGIN PROVIDERS -->
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="agri-login-external">
+
+                    <p>Or sign in using another account</p>
+
+                    <form id="external-account"
+                          asp-page="./ExternalLogin"
+                          asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post">
+
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit"
+                                    class="agri-login-external-button"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Log in using @provider.DisplayName">
+                                @provider.DisplayName
+                            </button>
+                        }
+
+                    </form>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const toggleButton =
+                document.getElementById("agriToggleLoginPassword");
+
+            const passwordInput =
+                document.getElementById("Input_Password");
+
+            if (toggleButton && passwordInput) {
+
+                toggleButton.addEventListener("click", function () {
+
+                    const isHidden =
+                        passwordInput.type === "password";
+
+                    passwordInput.type =
+                        isHidden ? "text" : "password";
+
+                    toggleButton.textContent =
+                        isHidden ? "Hide" : "Show";
+
+                    toggleButton.setAttribute(
+                        "aria-label",
+                        isHidden
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                });
+
+            }
+
+        });
+    </script>
+}

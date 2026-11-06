@@ -1,0 +1,78 @@
+﻿@model AgriStream.Web.ViewModels.Devices.DeviceFormViewModel
+
+<div asp-validation-summary="ModelOnly"
+     class="text-danger mb-3">
+</div>
+
+<div class="mb-3">
+
+    <label asp-for="DeviceName"
+           class="form-label fw-semibold"></label>
+
+    <input asp-for="DeviceName"
+           class="form-control"
+           placeholder="Enter device name" />
+
+    <span asp-validation-for="DeviceName"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-3">
+
+    <label asp-for="DeviceType"
+           class="form-label fw-semibold"></label>
+
+    <select asp-for="DeviceType"
+            class="form-select">
+
+        <option value="">-- Select Device Type --</option>
+        <option value="Soil Moisture Sensor">Soil Moisture Sensor</option>
+        <option value="Temperature Sensor">Temperature Sensor</option>
+        <option value="Humidity Sensor">Humidity Sensor</option>
+        <option value="Irrigation Controller">Irrigation Controller</option>
+        <option value="Water Level Sensor">Water Level Sensor</option>
+        <option value="Weather Station">Weather Station</option>
+
+    </select>
+
+    <span asp-validation-for="DeviceType"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-3">
+
+    <label asp-for="FarmId"
+           class="form-label fw-semibold"></label>
+
+    <select asp-for="FarmId"
+            asp-items="Model.Farms"
+            class="form-select">
+
+        <option value="0">-- Select Farm --</option>
+
+    </select>
+
+    <span asp-validation-for="FarmId"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-4">
+
+    <label asp-for="OperationalStatus"
+           class="form-label fw-semibold"></label>
+
+    <select asp-for="OperationalStatus"
+            class="form-select">
+
+        <option value="Inactive">Inactive</option>
+        <option value="Active">Active</option>
+
+    </select>
+
+    <span asp-validation-for="OperationalStatus"
+          class="text-danger"></span>
+
+</div>

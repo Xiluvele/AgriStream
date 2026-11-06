@@ -1,0 +1,395 @@
+﻿@model AgriStream.Web.ViewModels.Devices.DeviceIndexViewModel
+
+@{
+    ViewData["Title"] = "Device Management";
+}
+
+<style>
+    .device-page {
+        background: #f4f8f5;
+        min-height: 85vh;
+        padding: 35px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .device-container {
+        max-width: 1250px;
+        margin: auto;
+    }
+
+    .device-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+        .device-header h1 {
+            font-size: 28px;
+            font-weight: 750;
+            color: #173c2a;
+            margin-bottom: 8px;
+        }
+
+        .device-header p {
+            color: #7a8c80;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .device-card {
+        background: white;
+        border: 1px solid #e7eee9;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(20,65,39,0.05);
+    }
+
+    .device-toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .device-input,
+    .device-select {
+        height: 45px;
+        border: 1px solid #dce6de;
+        border-radius: 9px;
+        padding: 10px 13px;
+        background: #f9fbf9;
+        font-size: 13px;
+    }
+
+    .device-input {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .device-select {
+        min-width: 160px;
+    }
+
+    .device-btn {
+        display: inline-block;
+        background: #176c40;
+        border: none;
+        border-radius: 9px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .device-btn:hover {
+            background: #105431;
+            color: white;
+        }
+
+    .device-link {
+        color: #176c40;
+        font-weight: 650;
+        text-decoration: none;
+        margin-right: 12px;
+    }
+
+        .device-link:hover {
+            text-decoration: underline;
+        }
+
+        .device-link.delete {
+            color: #c14c4c;
+        }
+
+    .device-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .device-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .device-table th {
+            text-align: left;
+            background: #f5f9f6;
+            padding: 15px;
+            color: #708175;
+        }
+
+        .device-table td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #edf1ee;
+            color: #3a5040;
+        }
+
+    .device-name {
+        color: #1e432e;
+        font-weight: 700;
+    }
+
+    .device-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+        .device-status.active {
+            background: #e6f4e9;
+            color: #247847;
+        }
+
+        .device-status.inactive {
+            background: #fceeee;
+            color: #b54747;
+        }
+
+    .device-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+        color: #7a8c80;
+        font-size: 13px;
+    }
+
+    .device-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+        .device-pagination a {
+            padding: 8px 12px;
+            border: 1px solid #dce6de;
+            border-radius: 7px;
+            color: #176c40;
+            text-decoration: none;
+        }
+
+            .device-pagination a.active {
+                background: #176c40;
+                color: white;
+                border-color: #176c40;
+            }
+
+    @@media (max-width: 600px) {
+        .device-page {
+            padding: 20px 12px;
+        }
+
+        .device-card {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="device-page">
+
+    <div class="device-container">
+
+        <div class="device-header">
+
+            <div>
+                <h1>📡 Device Management</h1>
+                <p>
+                    Register and manage IoT devices connected to your farms.
+                </p>
+            </div>
+
+            <div>
+                <a asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="device-link">
+                    ← Dashboard
+                </a>
+
+                <a asp-action="Create"
+                   class="device-btn">
+                    + Add Device
+                </a>
+            </div>
+
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="device-card">
+
+            <form method="get"
+                  asp-action="Index"
+                  class="device-toolbar">
+
+                <input type="text"
+                       name="search"
+                       value="@Model.Search"
+                       class="device-input"
+                       placeholder="Search device name, type or farm..." />
+
+                <select name="status"
+                        class="device-select">
+
+                    <option value="">All Statuses</option>
+
+                    @if (Model.Status == "Active")
+                    {
+                        <option value="Active" selected>Active</option>
+                    }
+                    else
+                    {
+                        <option value="Active">Active</option>
+                    }
+
+                    @if (Model.Status == "Inactive")
+                    {
+                        <option value="Inactive" selected>Inactive</option>
+                    }
+                    else
+                    {
+                        <option value="Inactive">Inactive</option>
+                    }
+
+                </select>
+
+                <button type="submit"
+                        class="device-btn">
+                    Apply Filters
+                </button>
+
+                <a asp-action="Index"
+                   class="device-link"
+                   style="align-self:center;">
+                    Clear
+                </a>
+
+            </form>
+
+            <div class="device-table-wrapper">
+
+                <table class="device-table">
+
+                    <thead>
+                        <tr>
+                            <th>Device Name</th>
+                            <th>Type</th>
+                            <th>Farm</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.Devices.Any())
+                        {
+                            @foreach (var device in Model.Devices)
+                            {
+                                bool active =
+                                    device.OperationalStatus == "Active";
+
+                                <tr>
+                                    <td class="device-name">
+                                        @device.DeviceName
+                                    </td>
+
+                                    <td>@device.DeviceType</td>
+
+                                    <td>@device.FarmName</td>
+
+                                    <td>
+                                        <span class="device-status @(active ? "active" : "inactive")">
+                                            @device.OperationalStatus
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @device.LastUpdated.ToString("dd MMM yyyy HH:mm") UTC
+                                    </td>
+
+                                    <td>
+                                        <a asp-action="Details"
+                                           asp-route-id="@device.Id"
+                                           class="device-link">
+                                            Details
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@device.Id"
+                                           class="device-link">
+                                            Edit
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@device.Id"
+                                           class="device-link delete">
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6"
+                                    class="text-center text-muted py-5">
+                                    No devices found.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="device-footer">
+
+                <span>
+                    Page @Model.Page of
+                    @Math.Max(Model.TotalPages, 1)
+                    — @Model.TotalDevices device(s)
+                </span>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="device-pagination">
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-search="@Model.Search"
+                               asp-route-status="@Model.Status"
+                               class="@(i == Model.Page ? "active" : "")">
+                                @i
+                            </a>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

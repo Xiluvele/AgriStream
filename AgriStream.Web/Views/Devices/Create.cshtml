@@ -1,0 +1,56 @@
+﻿@model AgriStream.Web.ViewModels.Devices.DeviceFormViewModel
+
+@{
+    ViewData["Title"] = "Register Device";
+}
+
+<div class="container py-5" style="max-width:750px;">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <h2 class="fw-bold mb-2" style="color:#173c2a;">
+             Register New Device
+        </h2>
+
+        <p class="text-muted mb-4">
+            Register an IoT device and assign it to a farm.
+        </p>
+
+        @if (!Model.Farms.Any())
+        {
+            <div class="alert alert-warning">
+                You need an accessible farm before registering
+                a device.
+
+                <a asp-controller="Farms"
+                   asp-action="Create">
+                    Register a farm
+                </a>
+            </div>
+        }
+
+        <form asp-action="Create" method="post">
+
+            <partial name="_DeviceForm" model="Model" />
+
+            <button type="submit"
+                    class="btn text-white px-4"
+                    style="background:#176c40;"
+                    disabled="@(!Model.Farms.Any())">
+                Save Device
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-light px-4">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

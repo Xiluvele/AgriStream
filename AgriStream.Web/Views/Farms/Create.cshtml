@@ -1,0 +1,161 @@
+﻿@model AgriStream.Web.ViewModels.Farms.FarmFormViewModel
+
+@{
+    ViewData["Title"] = "Add Farm";
+}
+
+<style>
+    .farm-form-page {
+        min-height: 80vh;
+        background: #f4f8f5;
+        padding: 45px 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .farm-form-card {
+        max-width: 650px;
+        margin: auto;
+        background: white;
+        padding: 35px;
+        border: 1px solid #e5eee8;
+        border-radius: 18px;
+        box-shadow: 0 10px 35px rgba(20,65,39,0.07);
+    }
+
+        .farm-form-card h1 {
+            color: #173c2a;
+            font-size: 26px;
+            font-weight: 750;
+            margin-bottom: 10px;
+        }
+
+        .farm-form-card p {
+            color: #819087;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+    .farm-field {
+        margin-bottom: 22px;
+    }
+
+        .farm-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #314b3c;
+            margin-bottom: 9px;
+        }
+
+        .farm-field .form-control {
+            height: 48px;
+            background: #f9fbf9;
+            border: 1px solid #dce6de;
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 10px 13px;
+        }
+
+            .farm-field .form-control:focus {
+                border-color: #238653;
+                box-shadow: 0 0 0 3px rgba(35,134,83,0.10);
+            }
+
+    .farm-form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .farm-save-btn {
+        background: #176c40;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 13px 22px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+        .farm-save-btn:hover {
+            background: #105431;
+        }
+
+    .farm-cancel-btn {
+        background: #edf3ef;
+        color: #42634d;
+        border-radius: 9px;
+        padding: 13px 22px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+    }
+</style>
+
+<div class="farm-form-page">
+
+    <div class="farm-form-card">
+
+        <h1> Register New Farm</h1>
+
+        <p>
+            Enter the farm details below.
+            The farm will automatically be linked to your account.
+        </p>
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="farm-field">
+
+                <label asp-for="FarmName"></label>
+
+                <input asp-for="FarmName"
+                       class="form-control"
+                       placeholder="Enter farm name" />
+
+                <span asp-validation-for="FarmName"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="farm-field">
+
+                <label asp-for="Location"></label>
+
+                <input asp-for="Location"
+                       class="form-control"
+                       placeholder="Enter farm location" />
+
+                <span asp-validation-for="Location"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="farm-form-actions">
+
+                <button type="submit"
+                        class="farm-save-btn">
+                    Save Farm
+                </button>
+
+                <a asp-action="Index"
+                   class="farm-cancel-btn">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,55 @@
+﻿@model AgriStream.Web.ViewModels.Farms.FarmDetailsViewModel
+
+@{
+    ViewData["Title"] = "Farm Details";
+}
+
+<div class="container py-5" style="max-width:750px;">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <h2 class="fw-bold mb-3" style="color:#173c2a;">
+             Farm Details
+        </h2>
+
+        <p class="text-muted">
+            View registered farm information.
+        </p>
+
+        <hr />
+
+        <dl class="row mt-3">
+
+            <dt class="col-sm-4">Farm Name</dt>
+            <dd class="col-sm-8">@Model.FarmName</dd>
+
+            <dt class="col-sm-4">Location</dt>
+            <dd class="col-sm-8">@Model.Location</dd>
+
+            <dt class="col-sm-4">Owner</dt>
+            <dd class="col-sm-8">@Model.OwnerEmail</dd>
+
+            <dt class="col-sm-4">Registered Devices</dt>
+            <dd class="col-sm-8">@Model.DeviceCount</dd>
+
+        </dl>
+
+        <div class="mt-4">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn text-white"
+               style="background:#176c40;">
+                Edit Farm
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-light">
+                Back to Farms
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

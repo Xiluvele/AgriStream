@@ -1,0 +1,422 @@
+﻿@model AgriStream.Web.ViewModels.Users.UserManagementViewModel
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<style>
+    .agri-users-page {
+        background: #f4f8f5;
+        min-height: 100vh;
+        padding: 35px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .agri-users-container {
+        max-width: 1250px;
+        margin: auto;
+    }
+
+    .agri-users-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+        .agri-users-header h1 {
+            color: #173c2a;
+            font-size: 28px;
+            font-weight: 750;
+            margin-bottom: 8px;
+        }
+
+        .agri-users-header p {
+            color: #7a8c80;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .agri-users-back {
+        color: #176c40;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .agri-users-card {
+        background: white;
+        border: 1px solid #e7eee9;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(20,65,39,0.05);
+    }
+
+    .agri-users-toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+        .agri-users-toolbar input,
+        .agri-users-toolbar select {
+            height: 45px;
+            border: 1px solid #dce6de;
+            border-radius: 9px;
+            padding: 10px 13px;
+            background: #f9fbf9;
+            font-size: 13px;
+            color: #314b3c;
+        }
+
+    .agri-users-search {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .agri-users-filter {
+        min-width: 170px;
+    }
+
+    .agri-users-button {
+        background: #176c40;
+        border: none;
+        border-radius: 9px;
+        padding: 11px 22px;
+        color: white;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+        .agri-users-button:hover {
+            background: #105431;
+        }
+
+    .agri-users-clear {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: #61776a;
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .agri-users-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .agri-users-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .agri-users-table th {
+            text-align: left;
+            background: #f5f9f6;
+            color: #708175;
+            font-weight: 700;
+            padding: 15px;
+        }
+
+        .agri-users-table td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #edf1ee;
+            color: #3a5040;
+        }
+
+    .agri-users-email {
+        font-weight: 650;
+        color: #1e432e;
+    }
+
+    .agri-role-pill {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: #e6f4e9;
+        color: #247847;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .agri-role-admin {
+        background: #e9e8ff;
+        color: #5b52aa;
+    }
+
+    .agri-role-agronomist {
+        background: #e5f1ff;
+        color: #2869a7;
+    }
+
+    .agri-email-confirmed {
+        color: #198754;
+        font-weight: 650;
+    }
+
+    .agri-email-pending {
+        color: #c28b2b;
+        font-weight: 650;
+    }
+
+    .agri-users-edit {
+        color: #176c40;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .agri-users-edit:hover {
+            text-decoration: underline;
+        }
+
+    .agri-users-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 25px;
+        font-size: 13px;
+        color: #7a8c80;
+    }
+
+    .agri-users-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+        .agri-users-pagination a {
+            padding: 8px 12px;
+            border: 1px solid #dce6de;
+            border-radius: 7px;
+            color: #176c40;
+            text-decoration: none;
+        }
+
+            .agri-users-pagination a.active {
+                background: #176c40;
+                color: white;
+                border-color: #176c40;
+            }
+
+    .agri-users-empty {
+        text-align: center;
+        padding: 45px 15px;
+        color: #849489;
+    }
+
+    @@media (max-width: 600px) {
+        .agri-users-page {
+            padding: 20px 12px;
+        }
+
+        .agri-users-card {
+            padding: 15px;
+        }
+
+        .agri-users-toolbar {
+            flex-direction: column;
+        }
+
+        .agri-users-search,
+        .agri-users-filter {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="agri-users-page">
+
+    <div class="agri-users-container">
+
+        <div class="agri-users-header">
+
+            <div>
+                <h1>👥 User Management</h1>
+                <p>
+                    Manage registered users and their system roles.
+                </p>
+            </div>
+
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="agri-users-back">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="agri-users-card">
+
+            <form asp-controller="Users"
+                  asp-action="Index"
+                  method="get"
+                  class="agri-users-toolbar">
+
+                <input type="text"
+                       name="search"
+                       value="@Model.Search"
+                       class="agri-users-search"
+                       placeholder="Search users by email..." />
+
+                <select name="roleFilter"
+                        class="agri-users-filter">
+
+                    <option value="">All Roles</option>
+
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        if (Model.RoleFilter == role)
+                        {
+                            <option value="@role" selected>
+                                @role
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@role">
+                                @role
+                            </option>
+                        }
+                    }
+
+                </select>
+
+                <button type="submit"
+                        class="agri-users-button">
+                    Apply Filters
+                </button>
+
+                <a asp-action="Index"
+                   class="agri-users-clear">
+                    Clear
+                </a>
+
+            </form>
+
+            <div class="agri-users-table-wrapper">
+
+                <table class="agri-users-table">
+
+                    <thead>
+                        <tr>
+                            <th>Email Address</th>
+                            <th>Role</th>
+                            <th>Email Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.Users.Any())
+                        {
+                            @foreach (var user in Model.Users)
+                            {
+                                string roleClass = user.Role switch
+                                {
+                                    "Admin" => "agri-role-admin",
+                                    "Agronomist" => "agri-role-agronomist",
+                                    _ => ""
+                                };
+
+                                <tr>
+                                    <td class="agri-users-email">
+                                        @user.Email
+                                    </td>
+
+                                    <td>
+                                        <span class="agri-role-pill @roleClass">
+                                            @(string.IsNullOrEmpty(user.Role)
+                                                ? "No Role"
+                                                : user.Role)
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="agri-email-confirmed">
+                                                ✓ Confirmed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="agri-email-pending">
+                                                Pending
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <a asp-action="EditRole"
+                                           asp-route-id="@user.Id"
+                                           class="agri-users-edit">
+                                            Edit Role
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4"
+                                    class="agri-users-empty">
+                                    No users found.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="agri-users-footer">
+
+                <span>
+                    Showing page @Model.Page of
+                    @Math.Max(Model.TotalPages, 1)
+                    — @Model.TotalUsers user(s)
+                </span>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="agri-users-pagination">
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-search="@Model.Search"
+                               asp-route-roleFilter="@Model.RoleFilter"
+                               class="@(i == Model.Page ? "active" : "")">
+                                @i
+                            </a>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,60 @@
+﻿@model AgriStream.Web.ViewModels.Devices.DeviceDetailsViewModel
+
+@{
+    ViewData["Title"] = "Device Details";
+}
+
+<div class="container py-5" style="max-width:750px;">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <h2 class="fw-bold mb-3" style="color:#173c2a;">
+             Device Details
+        </h2>
+
+        <p class="text-muted">
+            View registered IoT device information.
+        </p>
+
+        <hr />
+
+        <dl class="row mt-3">
+
+            <dt class="col-sm-4">Device Name</dt>
+            <dd class="col-sm-8">@Model.DeviceName</dd>
+
+            <dt class="col-sm-4">Device Type</dt>
+            <dd class="col-sm-8">@Model.DeviceType</dd>
+
+            <dt class="col-sm-4">Assigned Farm</dt>
+            <dd class="col-sm-8">@Model.FarmName</dd>
+
+            <dt class="col-sm-4">Operational Status</dt>
+            <dd class="col-sm-8">@Model.OperationalStatus</dd>
+
+            <dt class="col-sm-4">Last Updated</dt>
+            <dd class="col-sm-8">
+                @Model.LastUpdated.ToString("dd MMM yyyy HH:mm") UTC
+            </dd>
+
+        </dl>
+
+        <div class="mt-4">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn text-white"
+               style="background:#176c40;">
+                Edit Device
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-light">
+                Back to Devices
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

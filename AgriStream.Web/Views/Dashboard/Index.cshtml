@@ -1,0 +1,674 @@
+﻿@model AgriStream.Web.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    .agri-dashboard {
+        background: #f4f8f5;
+        min-height: calc(100vh - 100px);
+        font-family: 'Segoe UI', sans-serif;
+        color: #243b2b;
+    }
+
+    .agri-dashboard-layout {
+        display: grid;
+        grid-template-columns: 245px minmax(0, 1fr);
+        min-height: calc(100vh - 100px);
+    }
+
+    /* SIDEBAR */
+
+    .agri-dashboard-sidebar {
+        background: #123e2a;
+        color: white;
+        padding: 28px 18px;
+    }
+
+    .agri-dashboard-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 750;
+        padding: 8px 12px 35px;
+    }
+
+    .agri-dashboard-nav-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #a4c5b0;
+        padding: 0 12px;
+        margin-bottom: 14px;
+    }
+
+    .agri-dashboard-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .agri-dashboard-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 15px;
+            color: #d9e9de;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+            .agri-dashboard-nav a:hover,
+            .agri-dashboard-nav a.active {
+                background: #26784e;
+                color: white;
+            }
+
+        .agri-dashboard-nav .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+    .agri-dashboard-sidebar-footer {
+        margin-top: 50px;
+        padding: 18px 12px;
+        border-top: 1px solid rgba(255,255,255,0.12);
+        color: #b6d0bd;
+        font-size: 12px;
+    }
+
+    /* MAIN CONTENT */
+
+    .agri-dashboard-main {
+        padding: 35px;
+        min-width: 0;
+    }
+
+    .agri-dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+        .agri-dashboard-header h1 {
+            font-size: 28px;
+            font-weight: 750;
+            color: #163d29;
+            margin: 0 0 8px;
+        }
+
+        .agri-dashboard-header p {
+            color: #7b8c80;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .agri-dashboard-role {
+        background: #e2f2e7;
+        color: #176c40;
+        border-radius: 30px;
+        padding: 10px 17px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    /* STAT CARDS */
+
+    .agri-dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .agri-stat-card {
+        background: white;
+        border: 1px solid #e7eee9;
+        border-radius: 16px;
+        padding: 23px;
+        box-shadow: 0 5px 20px rgba(20,65,39,0.04);
+    }
+
+    .agri-stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .agri-stat-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: #e8f5eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .agri-stat-label {
+        color: #718275;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .agri-stat-number {
+        color: #183e29;
+        font-size: 30px;
+        font-weight: 750;
+        margin: 0;
+    }
+
+    .agri-stat-caption {
+        font-size: 12px;
+        color: #94a297;
+        margin-top: 9px;
+    }
+
+    /* CONTENT PANELS */
+
+    .agri-dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 22px;
+        margin-bottom: 22px;
+    }
+
+    .agri-dashboard-panel {
+        background: white;
+        border: 1px solid #e7eee9;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(20,65,39,0.04);
+        min-width: 0;
+    }
+
+    .agri-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+        .agri-panel-header h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1c432d;
+            margin: 0;
+        }
+
+    .agri-panel-subtitle {
+        font-size: 13px;
+        color: #8b9a8e;
+        margin-bottom: 20px;
+    }
+
+    .agri-empty-state {
+        min-height: 185px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: #f8fbf8;
+        border: 1px dashed #d9e7dd;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .agri-empty-state-icon {
+        font-size: 34px;
+        margin-bottom: 12px;
+    }
+
+    .agri-empty-state h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #315c40;
+        margin-bottom: 8px;
+    }
+
+    .agri-empty-state p {
+        font-size: 13px;
+        color: #819287;
+        line-height: 1.7;
+        max-width: 310px;
+        margin: 0;
+    }
+
+    /* TABLE */
+
+    .agri-dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .agri-dashboard-table th {
+            text-align: left;
+            padding: 13px;
+            background: #f5f9f6;
+            color: #6e8073;
+            font-weight: 650;
+        }
+
+        .agri-dashboard-table td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #edf1ee;
+            color: #3b5141;
+        }
+
+    .agri-status-pill {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background: #e8f5eb;
+        color: #217a46;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .agri-quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .agri-quick-action {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 17px;
+        border: 1px solid #e1ebe4;
+        border-radius: 12px;
+        background: #f9fcfa;
+        color: #285b3b;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+        .agri-quick-action:hover {
+            background: #eaf5ed;
+            color: #176c40;
+        }
+
+    @@media (max-width: 1150px) {
+        .agri-dashboard-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 900px) {
+        .agri-dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .agri-dashboard-sidebar {
+            padding: 20px;
+        }
+
+        .agri-dashboard-nav {
+            flex-direction: row;
+            overflow-x: auto;
+        }
+
+            .agri-dashboard-nav a {
+                white-space: nowrap;
+            }
+
+        .agri-dashboard-sidebar-footer,
+        .agri-dashboard-nav-title {
+            display: none;
+        }
+
+        .agri-dashboard-brand {
+            padding-bottom: 18px;
+        }
+
+        .agri-dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 550px) {
+        .agri-dashboard-main {
+            padding: 20px 15px;
+        }
+
+        .agri-dashboard-stats,
+        .agri-quick-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="agri-dashboard">
+
+    <div class="agri-dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="agri-dashboard-sidebar">
+
+            <div class="agri-dashboard-brand">
+                
+                AgriStream
+            </div>
+
+            <div class="agri-dashboard-nav-title">
+                Main Menu
+            </div>
+
+            <nav class="agri-dashboard-nav">
+
+                <a asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="active">
+                   
+                    Dashboard
+                </a>
+
+                <a asp-controller="Farms"
+                   asp-action="Index">
+                   
+                    Farm Management
+                </a>
+
+                <a asp-controller="Devices"
+                   asp-action="Index">
+                   
+                    Sensor Devices
+                </a>
+
+                <a asp-controller="Telemetry"
+                   asp-action="Index">
+                    
+                    Sensor Readings
+                </a>
+
+                <a asp-controller="DroneImages"
+                   asp-action="Index">
+                   
+                    Drone Images
+                </a>
+
+                <a asp-controller="Irrigation"
+                   asp-action="Index">
+                   
+                    Irrigation
+                </a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Users" asp-action="Index">
+                       
+                        User Management
+                    </a>
+                }
+
+            </nav>
+
+            <div class="agri-dashboard-sidebar-footer">
+                Smart Agriculture Management Platform
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="agri-dashboard-main">
+
+            <div class="agri-dashboard-header">
+
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p>
+                        Welcome back, @Model.CurrentUserName.
+                        Here's what's happening across your farms.
+                    </p>
+                </div>
+
+                <span class="agri-dashboard-role">
+                    @Model.CurrentRole
+                </span>
+
+            </div>
+
+            <!-- STATISTICS -->
+            <div class="agri-dashboard-stats">
+
+                <div class="agri-stat-card">
+                   
+                    <div class="agri-stat-label">Total Farms</div>
+                    <h2 class="agri-stat-number">@Model.TotalFarms</h2>
+                    <div class="agri-stat-caption">
+                        Registered farms
+                    </div>
+                </div>
+
+                <div class="agri-stat-card">
+                   
+                    <div class="agri-stat-label">Total Devices</div>
+                    <h2 class="agri-stat-number">@Model.TotalDevices</h2>
+                    <div class="agri-stat-caption">
+                        Registered IoT devices
+                    </div>
+                </div>
+
+                <div class="agri-stat-card">
+                    
+                    <div class="agri-stat-label">Active Devices</div>
+                    <h2 class="agri-stat-number">@Model.ActiveDevices</h2>
+                    <div class="agri-stat-caption">
+                        @Model.ActiveDevices of @Model.TotalDevices devices active
+                    </div>
+                </div>
+
+                <div class="agri-stat-card">
+                    <div class="agri-stat-top">
+                        <span class="agri-stat-icon">
+                            @(User.IsInRole("Admin") ? "👥" : "📊")
+                        </span>
+                    </div>
+
+                    <div class="agri-stat-label">
+                        @(User.IsInRole("Admin")
+                            ? "Registered Users"
+                            : "Sensor Readings")
+                    </div>
+
+                    <h2 class="agri-stat-number">
+                        @(User.IsInRole("Admin")
+                            ? Model.TotalUsers.ToString()
+                            : "—")
+                    </h2>
+
+                    <div class="agri-stat-caption">
+                        @(User.IsInRole("Admin")
+                            ? "System user accounts"
+                            : "Awaiting Azure Table Storage")
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TELEMETRY AND IRRIGATION -->
+            <div class="agri-dashboard-grid">
+
+                <section class="agri-dashboard-panel">
+
+                    <div class="agri-panel-header">
+                        <h2> Sensor Monitoring</h2>
+                    </div>
+
+                    <p class="agri-panel-subtitle">
+                        Latest environmental readings from connected sensors
+                    </p>
+
+                    <div class="agri-empty-state">
+                        
+                        <h3>Telemetry integration coming next</h3>
+                        <p>
+                            Sensor readings will appear here once
+                            Azure Table Storage is connected.
+                        </p>
+                    </div>
+
+                </section>
+
+                <section class="agri-dashboard-panel">
+
+                    <div class="agri-panel-header">
+                        <h2>Irrigation Activity</h2>
+                    </div>
+
+                    <p class="agri-panel-subtitle">
+                        Monitor irrigation commands and device operations
+                    </p>
+
+                    <div class="agri-empty-state">
+                       
+                        <h3>No irrigation activity available</h3>
+                        <p>
+                            Irrigation commands will appear here
+                            after Azure Functions and Queue Storage
+                            are connected.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- DEVICES AND QUICK ACTIONS -->
+            <div class="agri-dashboard-grid">
+
+                <section class="agri-dashboard-panel">
+
+                    <div class="agri-panel-header">
+                        <h2>Recent Devices</h2>
+                    </div>
+
+                    
+                    @if (Model.RecentDevices.Any())
+                    {
+                        <div style="overflow-x:auto;">
+                            <table class="agri-dashboard-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Device</th>
+                                        <th>Type</th>
+                                        <th>Farm</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var device in Model.RecentDevices)
+                                    {
+                                        bool isActive = string.Equals(
+                                            device.Status,
+                                            "Active",
+                                            StringComparison.OrdinalIgnoreCase);
+
+                                        <tr>
+                                            <td>
+                                                <strong>@device.Name</strong>
+                                            </td>
+
+                                            <td>@device.DeviceType</td>
+
+                                            <td>@device.FarmName</td>
+
+                                            <td>
+                                                <span class="agri-status-pill"
+                                                      style="@(isActive
+                                                          ? ""
+                                                          : "background:#fceeee;color:#b54747;")">
+                                                    @device.Status
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                @device.LastUpdated.ToLocalTime()
+                                                .ToString("dd MMM yyyy HH:mm")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="agri-empty-state">
+                           
+                            <h3>No devices registered</h3>
+                            <p>
+                                Devices added to your farms will appear here.
+                            </p>
+                        </div>
+                    }
+
+
+                </section>
+
+                <section class="agri-dashboard-panel">
+
+                    <div class="agri-panel-header">
+                        <h2> Quick Actions</h2>
+                    </div>
+
+                    <p class="agri-panel-subtitle">
+                        Access frequently used AgriStream features
+                    </p>
+
+                    <div class="agri-quick-actions">
+
+                        <a asp-controller="Farms"
+                           asp-action="Index"
+                           class="agri-quick-action">
+                             Manage Farms
+                        </a>
+
+                        <a asp-controller="Devices"
+                           asp-action="Index"
+                           class="agri-quick-action">
+                             View Devices
+                        </a>
+
+                        <a asp-controller="DroneImages"
+                           asp-action="Index"
+                           class="agri-quick-action">
+                             Drone Images
+                        </a>
+
+                        <a asp-controller="Irrigation"
+                           asp-action="Index"
+                           class="agri-quick-action">
+                            Irrigation
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>

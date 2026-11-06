@@ -1,0 +1,344 @@
+﻿@model AgriStream.Web.ViewModels.Farms.FarmIndexViewModel
+
+@{
+    ViewData["Title"] = "Farm Management";
+}
+
+<style>
+    .farm-page {
+        background: #f4f8f5;
+        min-height: 85vh;
+        padding: 35px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .farm-container {
+        max-width: 1250px;
+        margin: auto;
+    }
+
+    .farm-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+        .farm-header h1 {
+            color: #173c2a;
+            font-size: 28px;
+            font-weight: 750;
+            margin-bottom: 8px;
+        }
+
+        .farm-header p {
+            color: #7a8c80;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    .farm-btn {
+        display: inline-block;
+        background: #176c40;
+        border: none;
+        border-radius: 9px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+        .farm-btn:hover {
+            background: #105431;
+            color: white;
+        }
+
+    .farm-card {
+        background: white;
+        border: 1px solid #e7eee9;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(20,65,39,0.05);
+    }
+
+    .farm-toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .farm-search {
+        flex: 1;
+        min-width: 220px;
+        height: 45px;
+        border: 1px solid #dce6de;
+        border-radius: 9px;
+        padding: 10px 13px;
+        background: #f9fbf9;
+        font-size: 13px;
+    }
+
+    .farm-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .farm-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .farm-table th {
+            background: #f5f9f6;
+            color: #708175;
+            text-align: left;
+            padding: 15px;
+            font-weight: 700;
+        }
+
+        .farm-table td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #edf1ee;
+            color: #3a5040;
+        }
+
+    .farm-name {
+        font-weight: 700;
+        color: #1e432e;
+    }
+
+    .farm-action {
+        color: #176c40;
+        text-decoration: none;
+        font-weight: 650;
+        margin-right: 12px;
+    }
+
+        .farm-action:hover {
+            text-decoration: underline;
+        }
+
+        .farm-action.delete {
+            color: #c14c4c;
+        }
+
+    .farm-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 25px;
+        color: #7a8c80;
+        font-size: 13px;
+    }
+
+    .farm-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+        .farm-pagination a {
+            padding: 8px 12px;
+            border: 1px solid #dce6de;
+            border-radius: 7px;
+            text-decoration: none;
+            color: #176c40;
+        }
+
+            .farm-pagination a.active {
+                background: #176c40;
+                color: white;
+                border-color: #176c40;
+            }
+
+    .farm-empty {
+        padding: 45px;
+        text-align: center;
+        color: #829387;
+    }
+
+    @@media (max-width: 600px) {
+        .farm-page {
+            padding: 20px 12px;
+        }
+
+        .farm-card {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="farm-page">
+
+    <div class="farm-container">
+
+        <div class="farm-header">
+
+            <div>
+                <h1> Farm Management</h1>
+                <p>
+                    Register and manage your agricultural farms.
+                </p>
+            </div>
+
+            <div>
+                <a asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="farm-action">
+                    ← Dashboard
+                </a>
+
+                <a asp-action="Create"
+                   class="farm-btn">
+                    + Add Farm
+                </a>
+            </div>
+
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="farm-card">
+
+            <form method="get"
+                  asp-action="Index"
+                  class="farm-toolbar">
+
+                <input type="text"
+                       name="search"
+                       value="@Model.Search"
+                       class="farm-search"
+                       placeholder="Search by farm name or location..." />
+
+                <button type="submit"
+                        class="farm-btn">
+                    Search
+                </button>
+
+                <a asp-action="Index"
+                   class="farm-action"
+                   style="align-self:center;">
+                    Clear
+                </a>
+
+            </form>
+
+            <div class="farm-table-wrapper">
+
+                <table class="farm-table">
+
+                    <thead>
+                        <tr>
+                            <th>Farm Name</th>
+                            <th>Location</th>
+                            <th>Owner</th>
+                            <th>Devices</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.Farms.Any())
+                        {
+                            @foreach (var farm in Model.Farms)
+                            {
+                                <tr>
+                                    <td class="farm-name">
+                                        @farm.FarmName
+                                    </td>
+
+                                    <td>@farm.Location</td>
+
+                                    <td>@farm.OwnerEmail</td>
+
+                                    <td>@farm.DeviceCount</td>
+
+                                    <td>
+                                        <a asp-action="Details"
+                                           asp-route-id="@farm.Id"
+                                           class="farm-action">
+                                            Details
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@farm.Id"
+                                           class="farm-action">
+                                            Edit
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@farm.Id"
+                                           class="farm-action delete">
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5"
+                                    class="farm-empty">
+                                    No farms found.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="farm-footer">
+
+                <span>
+                    Page @Model.Page of
+                    @Math.Max(Model.TotalPages, 1)
+                    — @Model.TotalFarms farm(s)
+                </span>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="farm-pagination">
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-search="@Model.Search"
+                               class="@(i == Model.Page ? "active" : "")">
+                                @i
+                            </a>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

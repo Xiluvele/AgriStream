@@ -1,0 +1,175 @@
+﻿@model AgriStream.Web.ViewModels.Users.EditUserRoleViewModel
+
+@{
+    ViewData["Title"] = "Edit User Role";
+}
+
+<style>
+    .agri-role-page {
+        min-height: 80vh;
+        background: #f4f8f5;
+        padding: 50px 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .agri-role-card {
+        max-width: 550px;
+        margin: auto;
+        background: white;
+        padding: 35px;
+        border: 1px solid #e5eee8;
+        border-radius: 18px;
+        box-shadow: 0 10px 35px rgba(20,65,39,0.07);
+    }
+
+        .agri-role-card h1 {
+            font-size: 25px;
+            font-weight: 750;
+            color: #173c2a;
+            margin-bottom: 10px;
+        }
+
+        .agri-role-card p {
+            font-size: 13px;
+            color: #819087;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+    .agri-role-field {
+        margin-bottom: 23px;
+    }
+
+        .agri-role-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #314b3c;
+            margin-bottom: 9px;
+        }
+
+        .agri-role-field .form-control {
+            height: 48px;
+            background: #f9fbf9;
+            border: 1px solid #dce6de;
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 10px 13px;
+        }
+
+            .agri-role-field .form-control:focus {
+                border-color: #238653;
+                box-shadow: 0 0 0 3px rgba(35,134,83,0.10);
+            }
+
+    .agri-role-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .agri-role-save {
+        background: #176c40;
+        border: none;
+        border-radius: 9px;
+        padding: 13px 22px;
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+        .agri-role-save:hover {
+            background: #105431;
+        }
+
+    .agri-role-cancel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 13px 22px;
+        border-radius: 9px;
+        background: #edf3ef;
+        color: #42634d;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+    }
+
+        .agri-role-cancel:hover {
+            background: #e0ebe3;
+        }
+</style>
+
+<div class="agri-role-page">
+
+    <div class="agri-role-card">
+
+        <h1>Change User Role</h1>
+
+        <p>
+            Update the user's access level within AgriStream.
+            Role changes determine which features the user
+            can access.
+        </p>
+
+        <form asp-action="EditRole" method="post">
+
+            <input type="hidden" asp-for="UserId" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="agri-role-field">
+                <label>Email Address</label>
+
+                <input value="@Model.Email"
+                       class="form-control"
+                       readonly />
+            </div>
+
+            <div class="agri-role-field">
+
+                <label asp-for="SelectedRole">
+                    User Role
+                </label>
+
+                <select asp-for="SelectedRole"
+                        class="form-control">
+
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="SelectedRole"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="agri-role-actions">
+
+                <button type="submit"
+                        class="agri-role-save">
+                    Save Changes
+                </button>
+
+                <a asp-action="Index"
+                   class="agri-role-cancel">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
