@@ -361,7 +361,7 @@
         <aside class="agri-dashboard-sidebar">
 
             <div class="agri-dashboard-brand">
-                
+
                 AgriStream
             </div>
 
@@ -374,44 +374,44 @@
                 <a asp-controller="Dashboard"
                    asp-action="Index"
                    class="active">
-                   
+
                     Dashboard
                 </a>
 
                 <a asp-controller="Farms"
                    asp-action="Index">
-                   
+
                     Farm Management
                 </a>
 
                 <a asp-controller="Devices"
                    asp-action="Index">
-                   
+
                     Sensor Devices
                 </a>
 
                 <a asp-controller="Telemetry"
                    asp-action="Index">
-                    
+
                     Sensor Readings
                 </a>
 
                 <a asp-controller="DroneImages"
                    asp-action="Index">
-                   
+
                     Drone Images
                 </a>
 
                 <a asp-controller="Irrigation"
                    asp-action="Index">
-                   
+
                     Irrigation
                 </a>
 
                 @if (User.IsInRole("Admin"))
                 {
                     <a asp-controller="Users" asp-action="Index">
-                       
+
                         User Management
                     </a>
                 }
@@ -447,7 +447,7 @@
             <div class="agri-dashboard-stats">
 
                 <div class="agri-stat-card">
-                   
+
                     <div class="agri-stat-label">Total Farms</div>
                     <h2 class="agri-stat-number">@Model.TotalFarms</h2>
                     <div class="agri-stat-caption">
@@ -456,7 +456,7 @@
                 </div>
 
                 <div class="agri-stat-card">
-                   
+
                     <div class="agri-stat-label">Total Devices</div>
                     <h2 class="agri-stat-number">@Model.TotalDevices</h2>
                     <div class="agri-stat-caption">
@@ -465,7 +465,7 @@
                 </div>
 
                 <div class="agri-stat-card">
-                    
+
                     <div class="agri-stat-label">Active Devices</div>
                     <h2 class="agri-stat-number">@Model.ActiveDevices</h2>
                     <div class="agri-stat-caption">
@@ -515,16 +515,21 @@
                     </p>
 
                     <div class="agri-empty-state">
-                        
-                        <h3>Telemetry integration coming next</h3>
+                      
+                        <h3>Sensor Telemetry</h3>
                         <p>
-                            Sensor readings will appear here once
-                            Azure Table Storage is connected.
+                            View temperature, humidity and soil moisture readings
+                            retrieved from Azure Table Storage through Azure Functions.
                         </p>
+                        <a asp-controller="Telemetry" asp-action="Index"
+                           class="agri-quick-action" style="margin-top:18px;">
+                            View Sensor Readings
+                        </a>
                     </div>
 
                 </section>
 
+               
                 <section class="agri-dashboard-panel">
 
                     <div class="agri-panel-header">
@@ -535,17 +540,90 @@
                         Monitor irrigation commands and device operations
                     </p>
 
-                    <div class="agri-empty-state">
-                       
-                        <h3>No irrigation activity available</h3>
-                        <p>
-                            Irrigation commands will appear here
-                            after Azure Functions and Queue Storage
-                            are connected.
-                        </p>
-                    </div>
+                    @if (ViewBag.IrrigationError != null)
+                    {
+                        <div class="alert alert-warning">
+                            @ViewBag.IrrigationError
+                        </div>
+                    }
+                    else if (Model.IrrigationActivities != null &&
+                             Model.IrrigationActivities.Any())
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead>
+                                    <tr>
+                                        <th>Device</th>
+                                        <th>Command</th>
+                                        <th>Status</th>
+                                        <th>Requested At</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var activity in Model.IrrigationActivities)
+                                    {
+                                        <tr>
+                                            <td>
+                                                Device @activity.DeviceId
+                                            </td>
+
+                                            <td>
+                                                @if (activity.Command == "Start")
+                                                {
+                                                    <span class="text-success fw-semibold">
+                                                        Start Irrigation
+                                                    </span>
+                                                }
+                                                else if (activity.Command == "Stop")
+                                                {
+                                                    <span class="text-danger fw-semibold">
+                                                        Stop Irrigation
+                                                    </span>
+                                                }
+                                            </td>
+
+                                            <td>
+                                                <span class="badge bg-success">
+                                                    @activity.Status
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                @activity.RequestedAt
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="agri-empty-state">
+
+                            <h3>No irrigation activity available</h3>
+
+                            <p>
+                                Irrigation commands will appear here
+                                after they are processed by Azure Functions.
+                            </p>
+
+                            <a asp-controller="Irrigation"
+                               asp-action="Index"
+                               class="btn btn-success mt-3">
+                                Manage Irrigation
+                            </a>
+
+                        </div>
+                    }
 
                 </section>
+
 
             </div>
 
@@ -602,7 +680,7 @@
 
                                             <td>
                                                 @device.LastUpdated.ToLocalTime()
-                                                .ToString("dd MMM yyyy HH:mm")
+                                                
                                             </td>
                                         </tr>
                                     }
@@ -614,7 +692,7 @@
                     else
                     {
                         <div class="agri-empty-state">
-                           
+
                             <h3>No devices registered</h3>
                             <p>
                                 Devices added to your farms will appear here.
@@ -640,19 +718,19 @@
                         <a asp-controller="Farms"
                            asp-action="Index"
                            class="agri-quick-action">
-                             Manage Farms
+                            Manage Farms
                         </a>
 
                         <a asp-controller="Devices"
                            asp-action="Index"
                            class="agri-quick-action">
-                             View Devices
+                            View Devices
                         </a>
 
                         <a asp-controller="DroneImages"
                            asp-action="Index"
                            class="agri-quick-action">
-                             Drone Images
+                            Drone Images
                         </a>
 
                         <a asp-controller="Irrigation"

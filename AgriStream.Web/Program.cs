@@ -3,7 +3,7 @@ using AgriStream.Web.Data;
 using AgriStream.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using AgriStream.Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
@@ -47,7 +47,7 @@ builder.Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-
+builder.Services.AddHttpClient<SensorTelemetryService>();
 // ==========================================
 // 4. BUILD APPLICATION
 // ==========================================

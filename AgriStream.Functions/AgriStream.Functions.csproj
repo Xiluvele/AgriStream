@@ -11,19 +11,15 @@
 
 	<ItemGroup>
 
-		<PackageReference Include="Azure.Data.Tables"
-						  Version="12.13.0" />
+		<PackageReference Include="Azure.Data.Tables" Version="12.13.0" />
 
-		<PackageReference Include="Microsoft.Azure.Functions.Worker"
-						  Version="2.50.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.50.0" />
 
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk"
-						  Version="2.0.5"
-						  OutputItemType="Analyzer"
-						  PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.5.5" />
 
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http"
-						  Version="3.3.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.5" OutputItemType="Analyzer" PrivateAssets="all" />
+
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
 
 	</ItemGroup>
 

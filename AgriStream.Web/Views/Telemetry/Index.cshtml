@@ -1,0 +1,141 @@
+﻿@using AgriStream.Web.Services
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Sensor Telemetry";
+
+    var devices = ViewBag.Devices as List<SelectListItem>
+        ?? new List<SelectListItem>();
+
+    var readings = ViewBag.Readings as List<SensorReadingDto>
+        ?? new List<SensorReadingDto>();
+
+    int? selectedId = ViewBag.SelectedDeviceId is int id
+        ? id
+        : null;
+}
+
+<div class="container py-4">
+
+    <h2 class="fw-bold text-success mb-3">
+        Sensor Telemetry
+    </h2>
+
+    <p class="text-muted">
+        Monitor temperature, humidity and soil moisture
+        readings retrieved from Azure Table Storage
+        through Azure Functions.
+    </p>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+
+        <h5 class="mb-3">Select Sensor Device</h5>
+
+        <form asp-controller="Telemetry"
+              asp-action="Index"
+              method="get">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-8">
+                    <label class="form-label">
+                        Sensor Device
+                    </label>
+
+                    <select name="deviceId"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            -- Select Device --
+                        </option>
+
+                        @foreach (var device in devices)
+                        {
+                            <option value="@device.Value"
+                                    selected="@(device.Value == selectedId?.ToString())">
+                                @device.Text
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <button type="submit"
+                            class="btn btn-success w-100">
+                        View Sensor Readings
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @if (selectedId.HasValue && ViewBag.Error == null)
+    {
+        if (!readings.Any())
+        {
+            <div class="alert alert-info">
+                No sensor readings found for this device.
+            </div>
+        }
+        else
+        {
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+
+                <h5 class="mb-3">
+                    Sensor Readings
+                </h5>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Temperature</th>
+                                <th>Humidity</th>
+                                <th>Soil Moisture</th>
+                                <th>Recorded At</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var reading in readings)
+                            {
+                                <tr>
+                                    <td>@reading.Temperature °C</td>
+                                    <td>@reading.Humidity %</td>
+                                    <td>@reading.SoilMoisture %</td>
+                                    <td>
+                                        @reading.ReadingTime
+                                       
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        }
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn btn-outline-success">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>

@@ -15,8 +15,8 @@ namespace AgriStream.Web.ViewModels
 
         public string CurrentRole { get; set; } = "";
 
-        public List<DashboardDeviceViewModel> RecentDevices { get; set; }
-            = new();
+        public List<DashboardDeviceViewModel> RecentDevices { get; set; }= new();
+        public List<IrrigationActivityViewModel> IrrigationActivities { get; set; } = new();
     }
 
     public class DashboardDeviceViewModel
@@ -33,4 +33,16 @@ namespace AgriStream.Web.ViewModels
 
         public DateTime LastUpdated { get; set; }
     }
+
+    public class IrrigationActivityViewModel
+    {
+        public int DeviceId { get; set; }
+
+        public string Command { get; set; } = "";
+
+        public string Status { get; set; } = "";
+
+        public DateTimeOffset RequestedAt { get; set; }
+    }
+
 }

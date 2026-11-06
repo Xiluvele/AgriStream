@@ -1,78 +1,123 @@
-﻿@using Microsoft.AspNetCore.Mvc.Rendering
+﻿@model List<AgriStream.Web.Controllers.DroneImageItem>
 
 @{
     ViewData["Title"] = "Drone Images";
-    var farms = ViewBag.Farms as List<SelectListItem> ?? new();
 }
 
-<div class="container py-5" style="max-width:800px">
+<div class="container py-5">
 
-    <div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="d-flex justify-content-between align-items-center
+        flex-wrap gap-3 mb-4">
 
-        <h2 class="fw-bold text-success">
-            Drone Image Upload
-        </h2>
+        <div>
+            <h2 class="fw-bold text-success mb-1">
+                Drone Images
+            </h2>
 
-        <p class="text-muted">
-            Upload agricultural drone images to Azure Blob Storage.
-        </p>
+            <p class="text-muted mb-0">
+                View agricultural drone images stored
+                in Azure Blob Storage.
+            </p>
+        </div>
 
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["Success"]
-            </div>
-        }
-
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["Error"]
-            </div>
-        }
-
-        <form asp-action="Upload"
-              method="post"
-              enctype="multipart/form-data">
-
-            @Html.AntiForgeryToken()
-
-            <div class="mb-3">
-                <label class="form-label">Select Farm</label>
-
-                <select name="farmId"
-                        asp-items="farms"
-                        class="form-select"
-                        required>
-                    <option value="">-- Select Farm --</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Drone Image</label>
-
-                <input type="file"
-                       name="image"
-                       accept=".jpg,.jpeg,.png,.webp"
-                       class="form-control"
-                       required />
-            </div>
-
-            <button class="btn btn-success"
-                    type="submit"
-                    disabled="@(!farms.Any())">
-                Upload to Azure
-            </button>
-
-            <a asp-controller="Dashboard"
-               asp-action="Index"
-               class="btn btn-light">
-                Back to Dashboard
-            </a>
-
-        </form>
+        <a asp-controller="DroneImages"
+           asp-action="Create"
+           class="btn btn-success px-4">
+            + Upload Image
+        </a>
 
     </div>
 
-</div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
 
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+
+            <h4>No Drone Images Uploaded</h4>
+
+            <p class="text-muted">
+                Upload your first drone image to start
+                monitoring your agricultural farms.
+            </p>
+
+            <div>
+                <a asp-action="Create"
+                   class="btn btn-success">
+                    Upload First Image
+                </a>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var image in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card border-0 shadow-sm
+                        rounded-4 h-100 overflow-hidden">
+
+                        <a href="@image.ImageUrl"
+                           target="_blank"
+                           rel="noopener noreferrer">
+
+                            <img src="@image.ImageUrl"
+                                 alt="Drone image of @image.FarmName"
+                                 class="card-img-top"
+                                 style="height:220px;
+                            object-fit:cover;" />
+
+                        </a>
+
+                        <div class="card-body">
+
+                            <h6 class="fw-bold text-success">
+                                @image.FarmName
+                            </h6>
+
+                            <p class="text-muted small mb-2">
+                                @image.FileName
+                            </p>
+
+                            <p class="small text-muted">
+                                Uploaded:
+                                @(image.UploadedAt?.ToLocalTime()
+                                    .ToString("dd MMM yyyy HH:mm")
+                                    ?? "Unknown")
+                            </p>
+
+                            <a href="@image.ImageUrl"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-outline-success btn-sm">
+                                View Full Image
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
